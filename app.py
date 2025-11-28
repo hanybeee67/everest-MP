@@ -5,10 +5,11 @@ from datetime import datetime
 app = Flask(__name__)
 
 # DB 설정
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///members.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///members_new.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
 
 # DB 모델
 class Members(db.Model):
@@ -19,7 +20,13 @@ class Members(db.Model):
     reg_date = db.Column(db.String(20))
 
 
-# 메인 페이지
+# Render/서버 최초 요청 시 자동으로 DB 테이블 생성
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
+
+# 루트 URL → 통합 QR 화면으로 자동 이동
 @app.route('/')
 def index():
     return redirect('/unified?branch=dongdaemun')
@@ -52,14 +59,14 @@ def visit():
     return render_template("visit.html", branch=branch, phone=phone)
 
 
-# 하나의 QR → 초기 화면
+# 하나의 QR → 전화번호 입력 화면
 @app.route('/unified')
 def unified():
     branch = request.args.get('branch', 'dongdaemun')
     return render_template("unified.html", branch=branch)
 
 
-# QR → 전화번호 → 자동 분기
+# 전화번호 입력 후 자동 분기
 @app.route('/unified-check', methods=['POST'])
 def unified_check():
     phone = request.form['phone']
@@ -73,7 +80,6 @@ def unified_check():
         return redirect(f"/visit?branch={branch}&phone={phone}")
 
 
+# 실행 (로컬 개발용)
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
