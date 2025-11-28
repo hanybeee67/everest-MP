@@ -22,7 +22,7 @@ class Members(db.Model):
 # 메인 페이지
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return redirect('/unified?branch=dongdaemun')
 
 
 # 신규 가입
@@ -41,7 +41,7 @@ def join():
 
         return render_template("success.html", name=name, branch=branch)
 
-    return render_template("register.html", branch=branch, phone=phone)
+    return render_template("join.html", branch=branch, phone=phone)
 
 
 # 재방문
