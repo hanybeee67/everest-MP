@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>에베레스트 멤버십</title>
+</head>
+<body>
+    <h1>에베레스트 멤버십</h1>
+    <h2>지점: {{ branch }}</h2>
+
+    <form action="/unified-check" method="post">
+        <input type="text" name="phone" placeholder="전화번호 숫자만 입력" required>
+        <input type="hidden" name="branch" value="{{ branch }}">
+        <br><br>
+        <button type="submit">확인</button>
+    </form>
+</body>
+</html>
