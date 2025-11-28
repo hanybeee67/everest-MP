@@ -20,11 +20,6 @@ class Members(db.Model):
     reg_date = db.Column(db.String(20))
 
 
-# Render/서버 최초 요청 시 자동으로 DB 테이블 생성
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
 
 # 루트 URL → 통합 QR 화면으로 자동 이동
 @app.route('/')
