@@ -5,139 +5,43 @@
     <title>관리자 대시보드</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-    <style>
-        body {
-            background-color: #f0f2f5;
-        }
-
-        .admin-wrapper {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .dashboard-title {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 24px;
-        }
-
-        /* 통계 카드 */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-        }
-
-        .stat-title {
-            font-size: 14px;
-            color: #777;
-        }
-
-        .stat-value {
-            margin-top: 8px;
-            font-size: 28px;
-            font-weight: 800;
-        }
-
-        /* 정렬 영역 */
-        .toolbar {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .toolbar select {
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-
-        .print-btn {
-            padding: 10px 16px;
-            background: #333;
-            color: white;
-            border-radius: 8px;
-            text-decoration: none;
-        }
-
-        /* 테이블 */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-        }
-
-        th {
-            background: #fafafa;
-            font-size: 15px;
-            padding: 14px;
-            border-bottom: 1px solid #eee;
-        }
-
-        td {
-            padding: 14px;
-            font-size: 14px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-
-        @media print {
-            .toolbar, .stats-grid { display: none; }
-            body { background: white; }
-            .admin-wrapper { margin: 0; }
-        }
-    </style>
 </head>
 
 <body>
-<div class="admin-wrapper">
 
-    <h1 class="dashboard-title">관리자 대시보드</h1>
+<div class="page-wrapper">
 
-    <!-- === 통계 카드 4종 === -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-title">전체 회원 수</div>
-            <div class="stat-value">{{ total_members }}</div>
+    <h1 class="page-title">관리자 대시보드</h1>
+
+    <!-- === 통계 카드 === -->
+    <div class="dashboard">
+
+        <div class="dashboard-card">
+            <div class="dashboard-title">전체 회원 수</div>
+            <div class="dashboard-value">{{ total_members }}</div>
         </div>
 
-        <div class="stat-card">
-            <div class="stat-title">오늘 가입자</div>
-            <div class="stat-value">{{ today_members }}</div>
+        <div class="dashboard-card">
+            <div class="dashboard-title">오늘 가입자</div>
+            <div class="dashboard-value">{{ today_members }}</div>
         </div>
 
-        <div class="stat-card">
-            <div class="stat-title">지점별 회원 수 ({{ top_branch_name }})</div>
-            <div class="stat-value">{{ top_branch_count }}</div>
+        <div class="dashboard-card">
+            <div class="dashboard-title">가장 많은 지점 ({{ top_branch_name }})</div>
+            <div class="dashboard-value">{{ top_branch_count }}</div>
         </div>
 
-        <div class="stat-card">
-            <div class="stat-title">누적 방문 횟수</div>
-            <div class="stat-value">{{ total_visits }}</div>
+        <div class="dashboard-card">
+            <div class="dashboard-title">누적 방문 수</div>
+            <div class="dashboard-value">{{ total_visits }}</div>
         </div>
+
     </div>
 
-    <!-- === 정렬 / 프린트 === -->
+    <!-- === 정렬 영역 === -->
     <div class="toolbar">
         <form method="get">
-            <select name="sort">
+            <select name="sort" class="admin-select">
                 <option value="date" {% if sort=='date' %}selected{% endif %}>가입일순</option>
                 <option value="name" {% if sort=='name' %}selected{% endif %}>이름순</option>
                 <option value="branch" {% if sort=='branch' %}selected{% endif %}>지점순</option>
@@ -151,26 +55,29 @@
     </div>
 
     <!-- === 회원 테이블 === -->
-    <table>
-        <tr>
-            <th>이름</th>
-            <th>전화번호</th>
-            <th>지점</th>
-            <th>방문횟수</th>
-            <th>가입일</th>
-        </tr>
+    <div class="table-wrapper">
+        <table>
+            <tr>
+                <th>이름</th>
+                <th>전화번호</th>
+                <th>지점</th>
+                <th>방문횟수</th>
+                <th>가입일</th>
+            </tr>
 
-        {% for m in members %}
-        <tr>
-            <td>{{ m.name }}</td>
-            <td>{{ m.phone }}</td>
-            <td>{{ m.branch }}</td>
-            <td>{{ m.visit_count }}</td>
-            <td>{{ m.created_at }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+            {% for m in members %}
+            <tr>
+                <td>{{ m.name }}</td>
+                <td>{{ m.phone }}</td>
+                <td>{{ m.branch }}</td>
+                <td>{{ m.visit_count }}</td>
+                <td>{{ m.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 
 </div>
+
 </body>
 </html>

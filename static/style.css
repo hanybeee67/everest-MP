@@ -1,178 +1,161 @@
-/* ===== 공통 기본 스타일 ===== */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+/* ====== 기본 초기화 ====== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    font-family: "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: #f5f5f5;
+    font-family: "Noto Sans KR", sans-serif;
+    background: #f2f4f8;
     color: #222;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
 }
 
-/* 페이지 전체 래퍼 */
+/* ====== 페이지 전체 래퍼 ====== */
 .page-wrapper {
     width: 100%;
-    max-width: 480px;
-    margin: 32px auto;
-    padding: 0 16px;
+    max-width: 1200px;           /* ★ PC에서는 1200px까지 확장 */
+    margin: 0 auto;
+    padding: 30px 20px;
 }
 
+/* ====== 제목 ====== */
 .page-title {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 800;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .page-subtitle {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 16px;
+    font-size: 16px;
+    color: #777;
+    margin-bottom: 20px;
 }
 
-/* 카드 레이아웃 */
+/* ====== 공통 카드 ====== */
 .card {
-    background-color: #ffffff;
+    background: white;
     border-radius: 16px;
-    padding: 24px 20px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    padding: 28px;
+    box-shadow: 0 8px 26px rgba(0,0,0,0.08);
+    margin-bottom: 26px;
 }
 
-/* 라벨 */
+/* ====== 라벨 ====== */
 .label {
-    font-size: 14px;
     font-weight: 600;
     margin-bottom: 6px;
     display: block;
 }
 
-/* 설명 텍스트 */
-.info-text {
-    font-size: 13px;
-    color: #777;
-    margin-bottom: 16px;
-}
-
-/* input 공통 */
+/* ====== 입력 박스 ====== */
 input[type="text"],
 input[type="tel"],
 input[type="date"],
 select {
     width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 12px;
-    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 16px;
+    border-radius: 10px;
     border: 1px solid #ccc;
-    font-size: 15px;
+    margin-bottom: 16px;
 }
 
-/* 버튼 */
+/* ====== 버튼 ====== */
 .btn {
     width: 100%;
-    padding: 12px 16px;
-    background-color: #ff7043;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
+    padding: 14px 16px;
+    font-size: 18px;
     font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    background: #ff6b35;
+    color: white;
     cursor: pointer;
 }
 
 .btn:hover {
-    background-color: #ff5722;
+    background: #ff5720;
 }
 
-/* 지점 선택 버튼 */
+/* ====== 지점 선택 ====== */
 .branch-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
 }
 
 .branch-btn {
-    padding: 12px;
-    text-align: center;
+    padding: 16px;
+    background: white;
     border-radius: 12px;
-    background: #fff;
     border: 1px solid #ddd;
+    text-align: center;
     text-decoration: none;
     color: #222;
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .branch-btn:hover {
-    border-color: #ff7043;
+    border-color: #ff6b35;
 }
 
-/* 체크박스 줄 */
-.checkbox-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-    gap: 6px;
-    font-size: 13px;
+/* ===== 관리자 테이블 ===== */
+.table-wrapper {
+    overflow-x: auto;
 }
 
-/* 관리자 테이블 */
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
-}
-
-th, td {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
 
 th {
-    background-color: #fafafa;
+    background: #fafafa;
+    padding: 16px;
     font-weight: 700;
+    border-bottom: 1px solid #eee;
 }
 
-.admin-controls {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
+td {
+    padding: 16px;
+    border-bottom: 1px solid #f5f5f5;
 }
 
-.print-btn {
-    background-color: #333;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 6px;
-    text-decoration: none;
-    cursor: pointer;
+tr:hover td {
+    background: #f8f9fb;
 }
 
-.sort-select {
-    padding: 8px;
-    border-radius: 6px;
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
-/* 프린트 시 숨김 */
-@media print {
-    .admin-controls { display: none; }
+.dashboard-card {
+    padding: 24px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
 }
 
-/* ===== 반응형 ===== */
-@media (max-width: 600px) {
-    .page-wrapper {
-        margin-top: 18px;
-        padding: 0 12px;
-    }
+.dashboard-title {
+    color: #777;
+    font-size: 14px;
+}
 
-    .page-title {
-        font-size: 24px;
-    }
+.dashboard-value {
+    margin-top: 8px;
+    font-size: 32px;
+    font-weight: 800;
+}
 
-    .card {
-        padding: 20px 16px;
-    }
+/* ====== 모바일 ====== */
+@media (max-width: 768px) {
+    .page-title { font-size: 26px; }
+    .card { padding: 20px; }
+    input, select { font-size: 15px; }
+    .btn { font-size: 16px; }
 }
