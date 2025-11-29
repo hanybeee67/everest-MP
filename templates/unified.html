@@ -3,16 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>에베레스트 멤버십</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <h1>에베레스트 멤버십</h1>
-    <h2>지점: {{ branch }}</h2>
 
-    <form action="/unified-check" method="post">
-        <input type="text" name="phone" placeholder="전화번호 숫자만 입력" required>
-        <input type="hidden" name="branch" value="{{ branch }}">
-        <br><br>
-        <button type="submit">확인</button>
-    </form>
+<body>
+
+<div class="page-wrapper">
+    <h1 class="page-title">에베레스트 멤버십</h1>
+    <p class="page-subtitle">지점: {{ branch }}</p>
+
+    <div class="card">
+        <p class="info-text">전화번호를 입력하시면 신규 또는 재방문 여부를 확인합니다.</p>
+
+        <form action="/unified" method="post">
+            <input type="hidden" name="branch" value="{{ branch }}">
+
+            <label class="label">전화번호</label>
+            <input type="tel" name="phone" placeholder="숫자만 입력" required>
+
+            <button type="submit" class="btn">확인</button>
+        </form>
+    </div>
+</div>
+
 </body>
 </html>

@@ -2,121 +2,42 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>에베레스트 신규 가입</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background: #f7f7f7;
-            display: flex;
-            justify-content: center;
-            padding: 40px 15px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 420px;
-            background: white;
-            padding: 30px 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            font-size: 26px;
-            text-align: center;
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
-
-        .label {
-            font-size: 15px;
-            margin: 10px 0 6px;
-            font-weight: 500;
-        }
-
-        input[type="text"],
-        input[type="date"] {
-            width: 100%;
-            padding: 14px;
-            border: 1.2px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-bottom: 12px;
-            box-sizing: border-box;
-        }
-
-        input[readonly] {
-            background-color: #f0f0f0;
-            color: #555;
-            font-weight: 500;
-        }
-
-        .checkbox-area {
-            margin: 15px 0;
-            font-size: 15px;
-            line-height: 22px;
-        }
-
-        button {
-            width: 100%;
-            padding: 16px;
-            background-color: #d35400;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
-        button:hover {
-            background-color: #c0392b;
-        }
-    </style>
+    <title>에베레스트 멤버십 가입</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-<div class="container">
+<div class="page-wrapper">
+    <h1 class="page-title">에베레스트 멤버십 가입</h1>
+    <p class="page-subtitle">지점: {{ branch }}</p>
 
-    <h1>에베레스트 신규가입</h1>
+    <div class="card">
+        <form method="post">
 
-    <form method="post">
+            <label class="label">이름</label>
+            <input type="text" name="name" required>
 
-        <!-- 지점명 -->
-        <div class="label">지점명</div>
-        <input type="text" value="{{ branch }}" readonly>
+            <label class="label">전화번호</label>
+            <input type="tel" name="phone" value="{{ phone }}" required>
 
-        <!-- 전화번호 -->
-        <div class="label">전화번호</div>
-        <input type="text" value="{{ phone }}" readonly>
+            <label class="label">생년월일</label>
+            <input type="date" name="birth" required>
 
-        <!-- 이름 입력 -->
-        <div class="label">이름</div>
-        <input type="text" name="name" placeholder="이름을 입력하세요" required>
+            <div class="checkbox-row">
+                <input type="checkbox" name="agree_marketing" value="yes">
+                <label>마케팅 수신 동의</label>
+            </div>
 
-        <!-- 생년월일 -->
-        <div class="label">생년월일</div>
-        <input type="date" name="birth" required>
+            <div class="checkbox-row">
+                <input type="checkbox" name="agree_privacy" value="yes" required>
+                <label>개인정보 수집·이용 동의 (필수)</label>
+            </div>
 
-        <!-- 마케팅 수신 동의 -->
-        <div class="checkbox-area">
-            <input type="checkbox" name="marketing" value="yes"> 광고성 정보 및 혜택 안내 수신 동의(선택)
-        </div>
-
-        <!-- 개인정보 수집 동의 -->
-        <div class="checkbox-area">
-            <input type="checkbox" name="privacy" value="yes" required>
-            개인정보 수집 및 이용 동의(필수)
-        </div>
-
-        <button type="submit">가입 완료</button>
-
-    </form>
+            <button type="submit" class="btn">가입하기</button>
+        </form>
+    </div>
 </div>
 
 </body>

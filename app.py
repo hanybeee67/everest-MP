@@ -1,125 +1,113 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 app = Flask(__name__)
 
-# ===========================
-# DB 설정
-# ===========================
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///members_new.db'
+# ===== DB 설정 =====
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///members.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 
 
-# ===========================
-# DB 모델
-# ===========================
+# ===== DB 모델 =====
 class Members(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
-    phone = db.Column(db.String(20), unique=True)
-    branch = db.Column(db.String(50))
+    phone = db.Column(db.String(20))
     birth = db.Column(db.String(20))
-    marketing = db.Column(db.String(5))
-    privacy = db.Column(db.String(5))
-    reg_date = db.Column(db.String(20))
+    branch = db.Column(db.String(50))
+    agree_marketing = db.Column(db.String(5))
+    agree_privacy = db.Column(db.String(5))
+    created_at = db.Column(db.String(30))
 
 
-# Render/로컬 모두에서 자동으로 테이블 생성
+# ===== 첫 실행 시 테이블 생성 =====
 with app.app_context():
     db.create_all()
 
 
-# ===========================
-# 루트 → 통합 화면으로 이동
-# ===========================
-@app.route('/')
+# ============================================
+# 1) 루트 → 지점 선택 페이지
+# ============================================
+@app.route("/")
 def index():
-    return redirect('/unified?branch=dongdaemun')
+    return render_template("branch_select.html")
 
 
-# ===========================
-# 신규가입
-# ===========================
-@app.route('/join', methods=['GET', 'POST'])
+# ============================================
+# 2) unified: 전화번호 입력 → 신규/재방문 체크
+# ============================================
+@app.route("/unified", methods=["GET", "POST"])
+def unified():
+    if request.method == "GET":
+        branch = request.args.get("branch", None)
+        return render_template("unified.html", branch=branch)
+
+    # POST 요청이면 등록·재방문 체크
+    phone = request.form.get("phone")
+    branch = request.form.get("branch")
+
+    exist = Members.query.filter_by(phone=phone).first()
+
+    if exist:
+        # 재방문
+        name = exist.name
+        return render_template("visit.html", name=name)
+
+    else:
+        # 신규 가입 페이지로 이동
+        return render_template("join.html", phone=phone, branch=branch)
+
+
+# ============================================
+# 3) 신규 가입(join)
+# ============================================
+@app.route("/join", methods=["POST"])
 def join():
-    branch = request.args.get('branch')
-    phone = request.args.get('phone')
+    name = request.form.get("name")
+    phone = request.form.get("phone")
+    branch = request.form.get("branch")
+    birth = request.form.get("birth")
 
-    if request.method == 'POST':
-        name = request.form['name']
-        birth = request.form['birth']
-        marketing = request.form.get('marketing', 'no')
-        privacy = request.form.get('privacy', 'no')
-        reg_date = datetime.now().strftime("%Y-%m-%d %H:%M")
+    agree_marketing = "yes" if request.form.get("agree_marketing") else "no"
+    agree_privacy = "yes" if request.form.get("agree_privacy") else "no"
 
-        new_member = Members(
-            name=name,
-            phone=phone,
-            branch=branch,
-            birth=birth,
-            marketing=marketing,
-            privacy=privacy,
-            reg_date=reg_date
-        )
+    new_member = Members(
+        name=name,
+        phone=phone,
+        branch=branch,
+        birth=birth,
+        agree_marketing=agree_marketing,
+        agree_privacy=agree_privacy,
+        created_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    )
 
-        db.session.add(new_member)
-        db.session.commit()
+    db.session.add(new_member)
+    db.session.commit()
 
-        return render_template("success.html", name=name, branch=branch)
-
-    return render_template("join.html", branch=branch, phone=phone)
+    return render_template("success.html", name=name)
 
 
-# ===========================
-# 재방문 체크
-# ===========================
-@app.route('/visit')
-def visit():
-    branch = request.args.get('branch')
-    phone = request.args.get('phone')
-    return render_template("visit.html", branch=branch, phone=phone)
-
-
-# ===========================
-# 🔥 관리자 페이지 (전체 회원 조회)
-# /admin/members
-# ===========================
-@app.route('/admin/members')
+# ============================================
+# 4) 관리자 페이지 (정렬 기능)
+# ============================================
+@app.route("/admin/members")
 def admin_members():
-    members = Members.query.all()
+    sort_type = request.args.get("sort", "date")
+
+    if sort_type == "name":
+        members = Members.query.order_by(Members.name.asc()).all()
+    elif sort_type == "branch":
+        members = Members.query.order_by(Members.branch.asc()).all()
+    else:
+        members = Members.query.order_by(Members.id.desc()).all()
+
     return render_template("members.html", members=members)
 
 
-# ===========================
-# 하나의 QR → 전화번호 입력 화면
-# ===========================
-@app.route('/unified')
-def unified():
-    branch = request.args.get('branch', 'dongdaemun')
-    return render_template("unified.html", branch=branch)
-
-
-# ===========================
-# 전화번호 입력 후 신규/재방문 자동 분기
-# ===========================
-@app.route('/unified-check', methods=['POST'])
-def unified_check():
-    phone = request.form['phone']
-    branch = request.form['branch']
-
-    user = Members.query.filter_by(phone=phone).first()
-
-    if user is None:
-        return redirect(f"/join?branch={branch}&phone={phone}")
-    else:
-        return redirect(f"/visit?branch={branch}&phone={phone}")
-
-
-# ===========================
-# 실행 (로컬 개발용)
-# ===========================
+# ============================================
+# 5) 서버 실행
+# ============================================
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)

@@ -15,7 +15,7 @@ body {
     min-height: 100vh;
 }
 
-/* 전체 래퍼 */
+/* 페이지 전체 래퍼 */
 .page-wrapper {
     width: 100%;
     max-width: 480px;
@@ -23,42 +23,42 @@ body {
     padding: 0 16px;
 }
 
-/* 타이틀 영역 */
 .page-title {
-    margin-bottom: 12px;
     font-size: 28px;
     font-weight: 800;
+    margin-bottom: 12px;
 }
 
 .page-subtitle {
-    margin-bottom: 16px;
     font-size: 14px;
     color: #666;
+    margin-bottom: 16px;
 }
 
-/* 카드 박스 */
+/* 카드 레이아웃 */
 .card {
     background-color: #ffffff;
     border-radius: 16px;
     padding: 24px 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 }
 
-/* 라벨 / 안내 텍스트 */
+/* 라벨 */
 .label {
-    display: block;
-    margin-bottom: 8px;
     font-size: 14px;
     font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
 }
 
+/* 설명 텍스트 */
 .info-text {
     font-size: 13px;
     color: #777;
     margin-bottom: 16px;
 }
 
-/* 입력 필드 */
+/* input 공통 */
 input[type="text"],
 input[type="tel"],
 input[type="date"],
@@ -73,14 +73,12 @@ select {
 
 /* 버튼 */
 .btn {
-    display: inline-block;
     width: 100%;
-    text-align: center;
     padding: 12px 16px;
-    border-radius: 10px;
-    border: none;
     background-color: #ff7043;
-    color: #fff;
+    color: white;
+    border: none;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
@@ -94,21 +92,18 @@ select {
 .branch-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 12px;
+    gap: 12px;
 }
 
 .branch-btn {
-    display: inline-block;
-    width: 100%;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    padding: 10px 8px;
-    font-size: 14px;
+    padding: 12px;
     text-align: center;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #ddd;
     text-decoration: none;
-    background-color: #fff;
     color: #222;
+    font-size: 14px;
 }
 
 .branch-btn:hover {
@@ -119,27 +114,65 @@ select {
 .checkbox-row {
     display: flex;
     align-items: center;
+    margin-bottom: 12px;
     gap: 6px;
-    margin-bottom: 10px;
     font-size: 13px;
 }
 
-/* ===== 반응형(모바일 최적화) ===== */
+/* 관리자 테이블 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+th, td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #fafafa;
+    font-weight: 700;
+}
+
+.admin-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.print-btn {
+    background-color: #333;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.sort-select {
+    padding: 8px;
+    border-radius: 6px;
+}
+
+/* 프린트 시 숨김 */
+@media print {
+    .admin-controls { display: none; }
+}
+
+/* ===== 반응형 ===== */
 @media (max-width: 600px) {
     .page-wrapper {
-        margin-top: 16px;
+        margin-top: 18px;
         padding: 0 12px;
     }
 
     .page-title {
-        font-size: 22px;
+        font-size: 24px;
     }
 
     .card {
         padding: 20px 16px;
-    }
-
-    .branch-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
