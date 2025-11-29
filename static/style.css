@@ -1,0 +1,145 @@
+/* ===== 공통 기본 스타일 ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f5f5f5;
+    color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+/* 전체 래퍼 */
+.page-wrapper {
+    width: 100%;
+    max-width: 480px;
+    margin: 32px auto;
+    padding: 0 16px;
+}
+
+/* 타이틀 영역 */
+.page-title {
+    margin-bottom: 12px;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.page-subtitle {
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #666;
+}
+
+/* 카드 박스 */
+.card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 24px 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* 라벨 / 안내 텍스트 */
+.label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.info-text {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 16px;
+}
+
+/* 입력 필드 */
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+/* 버튼 */
+.btn {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: none;
+    background-color: #ff7043;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #ff5722;
+}
+
+/* 지점 선택 버튼 */
+.branch-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.branch-btn {
+    display: inline-block;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 10px 8px;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #fff;
+    color: #222;
+}
+
+.branch-btn:hover {
+    border-color: #ff7043;
+}
+
+/* 체크박스 줄 */
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 13px;
+}
+
+/* ===== 반응형(모바일 최적화) ===== */
+@media (max-width: 600px) {
+    .page-wrapper {
+        margin-top: 16px;
+        padding: 0 12px;
+    }
+
+    .page-title {
+        font-size: 22px;
+    }
+
+    .card {
+        padding: 20px 16px;
+    }
+
+    .branch-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
