@@ -20,6 +20,11 @@ class Members(db.Model):
     reg_date = db.Column(db.String(20))
 
 
+# 🔥 Render 서버에서도 테이블이 자동으로 생성되도록 보장하는 코드
+with app.app_context():
+    db.create_all()
+
+
 # 루트 URL → 통합 QR 화면으로 자동 이동
 @app.route('/')
 def index():
@@ -74,8 +79,6 @@ def unified_check():
         return redirect(f"/visit?branch={branch}&phone={phone}")
 
 
-# 실행 (Render / 로컬 모두에서 테이블 자동 생성)
+# 실행 (로컬 개발용)
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
