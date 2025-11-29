@@ -17,10 +17,13 @@ class Members(db.Model):
     name = db.Column(db.String(50))
     phone = db.Column(db.String(20), unique=True)
     branch = db.Column(db.String(50))
+    birth = db.Column(db.String(20))
+    marketing = db.Column(db.String(5))
+    privacy = db.Column(db.String(5))
     reg_date = db.Column(db.String(20))
 
 
-# 🔥 Render 서버에서도 테이블이 자동으로 생성되도록 보장하는 코드
+# Render/로컬 모두에서 DB 자동 생성 보장
 with app.app_context():
     db.create_all()
 
@@ -39,9 +42,21 @@ def join():
 
     if request.method == 'POST':
         name = request.form['name']
+        birth = request.form['birth']
+        marketing = request.form.get('marketing', 'no')
+        privacy = request.form.get('privacy', 'no')
         reg_date = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-        new_member = Members(name=name, phone=phone, branch=branch, reg_date=reg_date)
+        new_member = Members(
+            name=name,
+            phone=phone,
+            branch=branch,
+            birth=birth,
+            marketing=marketing,
+            privacy=privacy,
+            reg_date=reg_date
+        )
+
         db.session.add(new_member)
         db.session.commit()
 
