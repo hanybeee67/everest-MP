@@ -20,7 +20,6 @@ class Members(db.Model):
     reg_date = db.Column(db.String(20))
 
 
-
 # 루트 URL → 통합 QR 화면으로 자동 이동
 @app.route('/')
 def index():
@@ -75,6 +74,8 @@ def unified_check():
         return redirect(f"/visit?branch={branch}&phone={phone}")
 
 
-# 실행 (로컬 개발용)
+# 실행 (Render / 로컬 모두에서 테이블 자동 생성)
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
