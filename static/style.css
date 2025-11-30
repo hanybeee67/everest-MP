@@ -1,9 +1,13 @@
 /* ===============================
    기본 세팅
 ================================ */
-body {
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
     background: #f2f3f7;
     font-family: "Noto Sans KR", sans-serif;
     color: #333;
@@ -11,16 +15,18 @@ body {
 
 a {
     text-decoration: none;
+    color: inherit;
 }
 
-/* 전체 페이지 중앙 정렬 */
+/* ===============================
+   공통 레이아웃
+================================ */
 .page-wrapper {
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
-/* 제목 */
 .page-title {
     font-size: 32px;
     font-weight: 800;
@@ -33,11 +39,9 @@ a {
     margin-bottom: 24px;
 }
 
-/* ===============================
-   카드 기본 스타일
-================================ */
+/* 공통 카드 */
 .card {
-    background: white;
+    background: #fff;
     padding: 28px;
     border-radius: 20px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
@@ -47,7 +51,7 @@ a {
 /* 버튼 */
 .btn {
     background: #ff7f3f;
-    color: white;
+    color: #fff;
     border: none;
     padding: 14px;
     width: 100%;
@@ -63,9 +67,7 @@ a {
     background: #ff6a21;
 }
 
-/* ===============================
-   폼 요소 스타일
-================================ */
+/* 입력 라벨과 인풋 */
 .label {
     font-size: 15px;
     font-weight: 600;
@@ -78,23 +80,21 @@ input[type="tel"],
 input[type="date"],
 select {
     width: 100%;
-    padding: 14px;
+    padding: 12px 14px;
     border-radius: 12px;
     border: 1px solid #ddd;
     margin-bottom: 16px;
     font-size: 16px;
-    box-sizing: border-box;
 }
 
-/* 체크박스 영역 */
+/* 체크박스 줄 */
 .checkbox-row {
     margin: 8px 0 16px 0;
-    font-size: 15px;
+    font-size: 14px;
 }
 
-
 /* ===============================
-   지점 선택 GRID
+   첫 화면: 지점 선택 그리드
 ================================ */
 .branch-grid {
     margin-top: 30px;
@@ -104,33 +104,35 @@ select {
 }
 
 .branch-card {
-    background: white;
-    padding: 24px;
-    border-radius: 16px;
+    background: #fff;
+    padding: 22px;
+    border-radius: 18px;
     text-align: center;
     font-size: 18px;
     font-weight: 700;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-    color: black;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     transition: 0.2s;
 }
 
 .branch-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.12);
 }
 
-
 /* ===============================
-   관리자 화면 통계 테이블
+   관리자: 통계 표
 ================================ */
+.stats-table {
+    margin-bottom: 24px;
+}
+
 .stats-table table {
     width: 100%;
-    background: white;
+    border-collapse: collapse;
+    background: #fff;
     border-radius: 18px;
     overflow: hidden;
-    margin-bottom: 28px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
 .stats-table th {
@@ -150,9 +152,8 @@ select {
     border-bottom: 1px solid #f0f0f0;
 }
 
-
 /* ===============================
-   관리자 화면: 정렬 / 프린트 버튼
+   관리자: 정렬 / 프린트 툴바
 ================================ */
 .toolbar {
     display: flex;
@@ -165,20 +166,20 @@ select {
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #aaa;
+    font-size: 14px;
 }
 
 .print-btn {
     padding: 10px 16px;
     background: #333;
-    color: white;
+    color: #fff;
     border-radius: 10px;
     cursor: pointer;
     font-size: 14px;
 }
 
-
 /* ===============================
-   회원 목록 테이블
+   관리자: 회원 목록 테이블
 ================================ */
 .table-wrapper {
     overflow-x: auto;
@@ -187,10 +188,10 @@ select {
 .table-wrapper table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background: #fff;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
 .table-wrapper th {
@@ -211,9 +212,8 @@ select {
     background-color: #f9f9f9;
 }
 
-
 /* ===============================
-   재방문 / 가입 완료 화면 버튼
+   재방문 / 가입완료 화면용
 ================================ */
 .action-area {
     text-align: center;
@@ -221,28 +221,43 @@ select {
 }
 
 .action-area .btn {
-    max-width: 250px;
+    max-width: 260px;
     margin: 0 auto;
 }
 
-
 /* ===============================
-   프린트 모드
+   반응형 & 프린트
 ================================ */
+@media (max-width: 768px) {
+    .page-wrapper {
+        margin: 20px auto;
+        padding: 0 14px;
+    }
+
+    .page-title {
+        font-size: 26px;
+    }
+}
+
 @media print {
-    .toolbar,
     .page-title,
     .page-subtitle,
+    .toolbar,
     .stats-table {
         display: none !important;
+    }
+
+    body {
+        background: #fff;
     }
 
     .page-wrapper {
         margin: 0;
         padding: 0;
+        max-width: 100%;
     }
 
-    table {
+    .table-wrapper table {
         box-shadow: none;
     }
 }

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
     <title>관리자 대시보드</title>
@@ -9,15 +8,12 @@
 </head>
 
 <body>
-
 <div class="page-wrapper">
 
     <!-- 제목 -->
     <h1 class="page-title">관리자 대시보드</h1>
 
-    <!-- ==========================
-         통계 표 (한 눈에 보는 요약)
-    =========================== -->
+    <!-- 통계 표 -->
     <div class="stats-table">
         <table>
             <tr>
@@ -30,9 +26,61 @@
             </tr>
             <tr>
                 <th>가장 많은 지점</th>
-                <td>{{ top_branch_name }} ({{ top_branch_count }})</td>
+                <td>
+                    {% if top_branch_name %}
+                        {{ top_branch_name }} ({{ top_branch_count }})
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>누적 방문 수</th>
                 <td>{{ total_visits }}</td>
-            </
+            </tr>
+        </table>
+    </div>
+
+    <!-- 정렬 / 프린트 -->
+    <div class="toolbar">
+
+        <form method="get" style="display:flex; gap:10px;">
+            <select name="sort" class="admin-select">
+                <option value="date"   {% if sort=='date'   %}selected{% endif %}>가입일순</option>
+                <option value="name"   {% if sort=='name'   %}selected{% endif %}>이름순</option>
+                <option value="branch" {% if sort=='branch' %}selected{% endif %}>지점순</option>
+                <option value="visit"  {% if sort=='visit'  %}selected{% endif %}>방문횟수순</option>
+            </select>
+
+            <button class="btn" style="width:auto; padding:10px 18px;">정렬</button>
+        </form>
+
+        <button class="print-btn" onclick="window.print()">프린트</button>
+    </div>
+
+    <!-- 회원 목록 테이블 -->
+    <div class="table-wrapper">
+        <table>
+            <tr>
+                <th>이름</th>
+                <th>전화번호</th>
+                <th>지점</th>
+                <th>방문횟수</th>
+                <th>가입일</th>
+            </tr>
+
+            {% for m in members %}
+            <tr>
+                <td>{{ m.name }}</td>
+                <td>{{ m.phone }}</td>
+                <td>{{ m.branch }}</td>
+                <td>{{ m.visit_count }}</td>
+                <td>{{ m.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
