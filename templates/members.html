@@ -30,7 +30,7 @@
                     {% if top_branch_name %}
                         {{ top_branch_name }} ({{ top_branch_count }})
                     {% else %}
-                        -
+                        없음 (0)
                     {% endif %}
                 </td>
             </tr>
@@ -41,10 +41,10 @@
         </table>
     </div>
 
-    <!-- 정렬 / 프린트 -->
+    <!-- 정렬 + 프린트 -->
     <div class="toolbar">
 
-        <form method="get" style="display:flex; gap:10px;">
+        <form method="get" class="sort-area">
             <select name="sort" class="admin-select">
                 <option value="date"   {% if sort=='date'   %}selected{% endif %}>가입일순</option>
                 <option value="name"   {% if sort=='name'   %}selected{% endif %}>이름순</option>
@@ -52,35 +52,44 @@
                 <option value="visit"  {% if sort=='visit'  %}selected{% endif %}>방문횟수순</option>
             </select>
 
-            <button class="btn" style="width:auto; padding:10px 18px;">정렬</button>
+            <button class="btn small-btn">정렬</button>
         </form>
 
-        <button class="print-btn" onclick="window.print()">프린트</button>
+        <button class="print-btn">프린트</button>
     </div>
 
-    <!-- 회원 목록 테이블 -->
+    <!-- 회원 목록 -->
     <div class="table-wrapper">
-        <table>
-            <tr>
-                <th>이름</th>
-                <th>전화번호</th>
-                <th>지점</th>
-                <th>방문횟수</th>
-                <th>가입일</th>
-            </tr>
+        <table class="member-table">
+            <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>전화번호</th>
+                    <th>지점</th>
+                    <th>방문횟수</th>
+                    <th>가입일</th>
+                </tr>
+            </thead>
 
+            <tbody>
             {% for m in members %}
-            <tr>
-                <td>{{ m.name }}</td>
-                <td>{{ m.phone }}</td>
-                <td>{{ m.branch }}</td>
-                <td>{{ m.visit_count }}</td>
-                <td>{{ m.created_at }}</td>
-            </tr>
+                <tr>
+                    <td>{{ m.name }}</td>
+                    <td>{{ m.phone }}</td>
+                    <td>{{ m.branch }}</td>
+                    <td>{{ m.visit_count }}</td>
+                    <td>{{ m.created_at }}</td>
+                </tr>
             {% endfor %}
+            </tbody>
         </table>
     </div>
 
 </div>
+
+<script>
+document.querySelector(".print-btn").onclick = () => window.print();
+</script>
+
 </body>
 </html>

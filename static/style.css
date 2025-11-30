@@ -261,3 +261,59 @@ select {
         box-shadow: none;
     }
 }
+/* =====================================
+   관리자 화면 전문 개선 – members.html 전용
+===================================== */
+
+/* 정렬/프린트 가로 정렬 */
+.toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0;
+}
+
+.sort-area {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 작은 정렬 버튼 */
+.small-btn {
+    width: auto !important;
+    padding: 12px 18px !important;
+}
+
+/* 회원 목록 테이블 균형 */
+.member-table th,
+.member-table td {
+    text-align: center;
+    padding: 14px 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.member-table thead th {
+    background: #fafafa;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.member-table tbody td {
+    font-size: 14px;
+}
+
+/* 프린트 시 최적화 */
+@media print {
+    .toolbar,
+    .stats-table,
+    .page-title {
+        display: none !important;
+    }
+
+    .member-table {
+        box-shadow: none !important;
+    }
+}
