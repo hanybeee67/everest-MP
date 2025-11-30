@@ -8,13 +8,16 @@
 </head>
 
 <body>
-
 <div class="page-wrapper">
+
     <h1 class="page-title">에베레스트 멤버십 가입</h1>
     <p class="page-subtitle">지점: {{ branch }}</p>
 
     <div class="card">
+
         <form action="/join" method="post">
+            <input type="hidden" name="branch" value="{{ branch }}">
+            <input type="hidden" name="phone" value="{{ phone }}">
 
             <label class="label">이름</label>
             <input type="text" name="name" required>
@@ -27,7 +30,7 @@
 
             <div class="checkbox-row">
                 <input type="checkbox" name="agree_marketing" value="yes">
-                <label>마케팅 수신 동의</label>
+                <label>마케팅 정보 수신 동의 (선택)</label>
             </div>
 
             <div class="checkbox-row">
@@ -37,8 +40,9 @@
 
             <button type="submit" class="btn">가입하기</button>
         </form>
-    </div>
-</div>
 
+    </div>
+
+</div>
 </body>
 </html>
