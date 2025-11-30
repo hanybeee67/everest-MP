@@ -163,4 +163,86 @@ select {
 
 .admin-select {
     padding: 10px;
-    border-ra
+    border-radius: 10px;
+    border: 1px solid #aaa;
+}
+
+.print-btn {
+    padding: 10px 16px;
+    background: #333;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+
+/* ===============================
+   회원 목록 테이블
+================================ */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+
+.table-wrapper th {
+    background: #fafafa;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    border-bottom: 1px solid #eee;
+}
+
+.table-wrapper td {
+    padding: 14px;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table-wrapper tr:hover {
+    background-color: #f9f9f9;
+}
+
+
+/* ===============================
+   재방문 / 가입 완료 화면 버튼
+================================ */
+.action-area {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.action-area .btn {
+    max-width: 250px;
+    margin: 0 auto;
+}
+
+
+/* ===============================
+   프린트 모드
+================================ */
+@media print {
+    .toolbar,
+    .page-title,
+    .page-subtitle,
+    .stats-table {
+        display: none !important;
+    }
+
+    .page-wrapper {
+        margin: 0;
+        padding: 0;
+    }
+
+    table {
+        box-shadow: none;
+    }
+}
