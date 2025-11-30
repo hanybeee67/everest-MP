@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <title>관리자 대시보드</title>
@@ -11,73 +12,27 @@
 
 <div class="page-wrapper">
 
+    <!-- 제목 -->
     <h1 class="page-title">관리자 대시보드</h1>
 
-    <!-- === 통계 카드 === -->
-    <div class="dashboard">
-
-        <div class="dashboard-card">
-            <div class="dashboard-title">전체 회원 수</div>
-            <div class="dashboard-value">{{ total_members }}</div>
-        </div>
-
-        <div class="dashboard-card">
-            <div class="dashboard-title">오늘 가입자</div>
-            <div class="dashboard-value">{{ today_members }}</div>
-        </div>
-
-        <div class="dashboard-card">
-            <div class="dashboard-title">가장 많은 지점 ({{ top_branch_name }})</div>
-            <div class="dashboard-value">{{ top_branch_count }}</div>
-        </div>
-
-        <div class="dashboard-card">
-            <div class="dashboard-title">누적 방문 수</div>
-            <div class="dashboard-value">{{ total_visits }}</div>
-        </div>
-
-    </div>
-
-    <!-- === 정렬 영역 === -->
-    <div class="toolbar">
-        <form method="get">
-            <select name="sort" class="admin-select">
-                <option value="date" {% if sort=='date' %}selected{% endif %}>가입일순</option>
-                <option value="name" {% if sort=='name' %}selected{% endif %}>이름순</option>
-                <option value="branch" {% if sort=='branch' %}selected{% endif %}>지점순</option>
-                <option value="visit" {% if sort=='visit' %}selected{% endif %}>방문횟수순</option>
-            </select>
-
-            <button class="btn" style="width:auto;">정렬</button>
-        </form>
-
-        <a class="print-btn" onclick="window.print()">프린트</a>
-    </div>
-
-    <!-- === 회원 테이블 === -->
-    <div class="table-wrapper">
+    <!-- ==========================
+         통계 표 (한 눈에 보는 요약)
+    =========================== -->
+    <div class="stats-table">
         <table>
             <tr>
-                <th>이름</th>
-                <th>전화번호</th>
-                <th>지점</th>
-                <th>방문횟수</th>
-                <th>가입일</th>
+                <th>전체 회원 수</th>
+                <td>{{ total_members }}</td>
             </tr>
-
-            {% for m in members %}
             <tr>
-                <td>{{ m.name }}</td>
-                <td>{{ m.phone }}</td>
-                <td>{{ m.branch }}</td>
-                <td>{{ m.visit_count }}</td>
-                <td>{{ m.created_at }}</td>
+                <th>오늘 가입자</th>
+                <td>{{ today_members }}</td>
             </tr>
-            {% endfor %}
-        </table>
-    </div>
-
-</div>
-
-</body>
-</html>
+            <tr>
+                <th>가장 많은 지점</th>
+                <td>{{ top_branch_name }} ({{ top_branch_count }})</td>
+            </tr>
+            <tr>
+                <th>누적 방문 수</th>
+                <td>{{ total_visits }}</td>
+            </
