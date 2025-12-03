@@ -1,92 +1,67 @@
-<!-- templates/members.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Everest 멤버 관리</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-<div class="page admin-page">
-    <header class="header">
-        <h1>멤버 목록</h1>
-        <p class="sub">지점별/방문수/금액 기준으로 확인할 수 있습니다.</p>
-        <div class="admin-nav">
-            <a class="btn secondary btn-small" href="{{ url_for('admin_coupons') }}">쿠폰 목록</a>
-            <a class="btn secondary btn-small" href="/">홈으로</a>
-        </div>
-    </header>
 
-    <main class="card">
-        <div class="toolbar">
-            <div class="sort-buttons">
-                <span>정렬: </span>
-                <a href="{{ url_for('admin_members', sort='date') }}" class="btn tiny">가입일</a>
-                <a href="{{ url_for('admin_members', sort='name') }}" class="btn tiny">이름</a>
-                <a href="{{ url_for('admin_members', sort='branch') }}" class="btn tiny">지점</a>
-                <a href="{{ url_for('admin_members', sort='visit') }}" class="btn tiny">방문횟수</a>
-                <a href="{{ url_for('admin_members', sort='amount') }}" class="btn tiny">누적금액</a>
-            </div>
-            <div class="search-box">
-                <input type="text" id="search" placeholder="이름 또는 전화번호 검색">
-            </div>
+<div class="page">
+
+    <div class="header">
+        <h1>회원 관리</h1>
+        <div class="sub">지점별 · 이름순 · 가입일순 정렬 및 조회</div>
+    </div>
+
+    <div class="card">
+
+        <div class="sort-buttons">
+            <a href="/admin/members?sort=date" class="btn small {% if sort=='date' %}active{% endif %}">
+                가입일순
+            </a>
+            <a href="/admin/members?sort=name" class="btn small {% if sort=='name' %}active{% endif %}">
+                이름순
+            </a>
+            <a href="/admin/members?sort=branch" class="btn small {% if sort=='branch' %}active{% endif %}">
+                지점순
+            </a>
         </div>
 
-        <div class="table-wrapper">
-            <table id="members-table">
-                <thead>
+        <table class="table">
+            <thead>
                 <tr>
                     <th>지점</th>
                     <th>이름</th>
                     <th>전화번호</th>
-                    <th>가입일</th>
+                    <th>생년월일</th>
                     <th>방문횟수</th>
-                    <th>누적금액</th>
-                    <th>마케팅 동의</th>
+                    <th>가입일</th>
                 </tr>
-                </thead>
-                <tbody>
-                {% for m in members %}
-                    <tr>
-                        <td>{{ m.branch }}</td>
-                        <td>{{ m.name }}</td>
-                        <td>{{ m.phone }}</td>
-                        <td>{{ m.join_date.strftime("%Y-%m-%d") if m.join_date else "" }}</td>
-                        <td>{{ m.visit_count or 0 }}</td>
-                        <td>{{ "{:,}".format(m.spend_amount or 0) }}</td>
-                        <td>{{ "Y" if m.marketing else "N" }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            </thead>
 
-        <div class="hint print-hint">
-            이 페이지를 브라우저 인쇄(Ctrl+P)하면 깔끔한 보고서 형태로 출력됩니다.
-        </div>
-    </main>
+            <tbody>
+                {% for m in members %}
+                <tr>
+                    <td>{{ m.branch }}</td>
+                    <td>{{ m.name }}</td>
+                    <td>{{ m.phone }}</td>
+                    <td>{{ m.birth }}</td>
+                    <td>{{ m.visit_count }}</td>
+                    <td>{{ m.join_date.strftime('%Y-%m-%d') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button onclick="window.print()" class="btn primary btn-full">전체 목록 프린트</button>
+
+    </div>
+
 </div>
 
-<script>
-const searchInput = document.getElementById('search');
-const table = document.getElementById('members-table');
-const rows = table.querySelectorAll('tbody tr');
-
-searchInput.addEventListener('input', function () {
-    const keyword = this.value.toLowerCase();
-    rows.forEach(row => {
-        const name = row.cells[1].textContent.toLowerCase();
-        const phone = row.cells[2].textContent.toLowerCase();
-        if (name.includes(keyword) || phone.includes(keyword)) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
-});
-</script>
 </body>
 </html>
