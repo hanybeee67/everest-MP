@@ -173,33 +173,34 @@ def visit():
     if request.method == "POST":
         branch = (request.form.get("branch") or "").strip()
         phone = (request.form.get("phone") or "").strip()
+        file = request.files.get("receipt_image")
 
         if not phone:
             error = "전화번호를 입력해 주세요."
             return render_template("visit.html", branch=branch, error=error)
 
-        member = Members.query.filter_by(phone=phone).first()
-
-        if not member:
-            error = "등록된 회원이 없습니다. 먼저 신규가입을 진행해 주세요."
+        if not file:
+            error = "영수증 이미지를 업로드해주세요."
             return render_template("visit.html", branch=branch, error=error)
 
-        # 방문 횟수 증가
+        member = Members.query.filter_by(phone=phone).first()
+        if not member:
+            error = "등록된 회원이 없습니다. 신규가입을 진행해주세요."
+            return render_template("visit.html", branch=branch, error=error)
+
         visit_before = member.visit_count or 0
         member.visit_count = visit_before + 1
 
-        # 쿠폰 발급
+        # 영수증 파일 저장 준비 (추후 OCR 적용 가능)
+        file.save(f"receipt_upload/{datetime.now().timestamp()}.jpg")
+
         coupons = issue_coupons_if_needed(member, visit_before, member.visit_count)
 
-        return render_template(
-            "visit_success.html",
-            member=member,
-            coupons=coupons,
-            branch=branch
-        )
+        return render_template("visit_success.html", member=member, coupons=coupons, branch=branch)
 
     branch = request.args.get("branch", "")
     return render_template("visit.html", branch=branch)
+
 
 
 # =========================
