@@ -1,156 +1,136 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import base64
+import os
+from google.cloud import vision
 
 app = Flask(__name__)
-
-# ===== DB 설정 =====
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///members.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///members.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
-# ===== DB 모델 정의 =====
+# ============================
+#  DB Models
+# ============================
 class Members(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    phone = db.Column(db.String(20))
-    birth = db.Column(db.String(20))
     branch = db.Column(db.String(50))
-    agree_marketing = db.Column(db.String(5))
-    agree_privacy = db.Column(db.String(5))
-    visit_count = db.Column(db.Integer, default=1)      # ★ 방문횟수
-    last_visit = db.Column(db.String(20))               # ★ 하루 1회 제한 일자
-    created_at = db.Column(db.String(30))
+    name = db.Column(db.String(50))
+    phone = db.Column(db.String(50), unique=True)
+    birth = db.Column(db.String(20))
+    visit_count = db.Column(db.Integer, default=1)
+    spend_amount = db.Column(db.Integer, default=0)
+    marketing = db.Column(db.Boolean, default=False)
+    privacy = db.Column(db.Boolean, default=False)
+    join_date = db.Column(db.DateTime, default=datetime.utcnow)
 
 
-# ===== DB 자동 생성 =====
-with app.app_context():
-    db.create_all()
+class Coupons(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    member_id = db.Column(db.Integer, db.ForeignKey("members.id"), nullable=False)
+    type = db.Column(db.String(50))
+    description = db.Column(db.String(200))
+    issued_at = db.Column(db.DateTime, default=datetime.utcnow)
+    used = db.Column(db.Boolean, default=False)
+
+    member = db.relationship("Members", backref=db.backref("coupons", lazy=True))
 
 
-# ============================================
-# 1) 첫 화면 → 지점 선택
-# ============================================
-@app.route("/")
-def index():
-    return render_template("branch_select.html")
+# ============================
+#  Google Vision OCR
+# ============================
+def extract_amount_from_receipt(image_bytes):
+    """
+    Google Vision OCR로 영수증에서 총 금액 숫자를 파싱한다.
+    금액을 찾으면 정수로 반환, 못 찾으면 0
+    """
+
+    client = vision.ImageAnnotatorClient()
+    image = vision.Image(content=image_bytes)
+    response = client.text_detection(image=image)
+
+    if response.error.message:
+        return 0
+
+    text = response.text_annotations[0].description if response.text_annotations else ""
+
+    # 숫자 형태 추출
+    import re
+    nums = re.findall(r"[0-9,]+", text)
+
+    if not nums:
+        return 0
+
+    # 가장 큰 금액을 총액으로 판단
+    values = [int(n.replace(",", "")) for n in nums]
+    return max(values)
 
 
-# ============================================
-# 2) unified: 전화번호 입력 → 신규/재방문 분기
-# ============================================
-@app.route("/unified", methods=["GET", "POST"])
-def unified():
-    # GET: 지점 선택 화면에서 넘어옴
-    if request.method == "GET":
-        branch = request.args.get("branch", None)
-        return render_template("unified.html", branch=branch)
+# ============================
+#  쿠폰 발행 로직
+# ============================
+def issue_coupons_if_needed(member, old_visit_count, old_amount):
 
-    # POST: 전화번호 입력 후 처리
-    phone = request.form.get("phone")
-    branch = request.form.get("branch")
+    issued = []
 
-    exist = Members.query.filter_by(phone=phone).first()
-    today = datetime.now().strftime("%Y-%m-%d")
+    # 1) 첫 방문 고객 라시 무료 쿠폰
+    if old_visit_count == 0 and member.visit_count == 1:
+        coupon = Coupons(
+            member_id=member.id,
+            type="FIRST_VISIT_LASSI",
+            description="첫 방문 감사 라시 무료 쿠폰"
+        )
+        db.session.add(coupon)
+        issued.append(coupon)
 
-    if exist:
-        # ★ 하루 1회 방문 제한 — last_visit이 오늘과 다를 때만 증가
-        if exist.last_visit != today:
-            exist.visit_count += 1
-            exist.last_visit = today
-            db.session.commit()
+    # 2) 방문 3회 단위 쿠폰
+    if member.visit_count // 3 > old_visit_count // 3:
+        coupon = Coupons(
+            member_id=member.id,
+            type="VISIT_3X",
+            description=f"{member.visit_count}회 방문 감사 쿠폰"
+        )
+        db.session.add(coupon)
+        issued.append(coupon)
 
-        return render_template("visit.html", name=exist.name)
+    # 3) 10만 원 누적 단위 쿠폰
+    old_step = old_amount // 100000
+    new_step = member.spend_amount // 100000
+    if new_step > old_step:
+        diff = new_step - old_step
+        for i in range(diff):
+            level = (old_step + i + 1) * 100000
+            coupon = Coupons(
+                member_id=member.id,
+                type="AMOUNT_100K",
+                description=f"누적 {level:,}원 달성 감사 쿠폰"
+            )
+            db.session.add(coupon)
+            issued.append(coupon)
 
-    # 신규 가입
-    return render_template("join.html", phone=phone, branch=branch)
-
-
-# ============================================
-# 3) 신규 가입 처리
-# ============================================
-@app.route("/join", methods=["POST"])
-def join():
-    name = request.form.get("name")
-    phone = request.form.get("phone")
-    branch = request.form.get("branch")
-    birth = request.form.get("birth")
-
-    agree_marketing = "yes" if request.form.get("agree_marketing") else "no"
-    agree_privacy = "yes" if request.form.get("agree_privacy") else "no"
-
-    today = datetime.now().strftime("%Y-%m-%d")
-
-    new_member = Members(
-        name=name,
-        phone=phone,
-        branch=branch,
-        birth=birth,
-        agree_marketing=agree_marketing,
-        agree_privacy=agree_privacy,
-        visit_count=1,                 # ★ 신규 가입자는 방문횟수 1로 시작
-        last_visit=today,               # ★ 마지막 방문 = 가입일
-        created_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    )
-
-    db.session.add(new_member)
-    db.session.commit()
-
-    return render_template("success.html", name=name)
+    return issued
 
 
-# ============================================
-# 4) 관리자 페이지 (정렬 + 통계)
-# ============================================
-@app.route("/admin/members")
-def admin_members():
-    sort = request.args.get("sort", "date")
+# ============================
+#  OCR 업로드 라우트
+# ============================
+@app.route("/ocr_upload", methods=["POST"])
+def ocr_upload():
+    file = request.files.get("receipt")
+    if not file:
+        return jsonify({"amount": 0})
 
-    # 정렬 조건
-    if sort == "name":
-        members = Members.query.order_by(Members.name.asc()).all()
-    elif sort == "branch":
-        members = Members.query.order_by(Members.branch.asc()).all()
-    elif sort == "visit":
-        members = Members.query.order_by(Members.visit_count.desc()).all()
-    else:
-        members = Members.query.order_by(Members.id.desc()).all()
+    image_bytes = file.read()
+    amount = extract_amount_from_receipt(image_bytes)
 
-    # ===== 통계 값 계산 =====
-    total_members = Members.query.count()
-
-    today = datetime.now().strftime("%Y-%m-%d")
-    today_members = Members.query.filter(Members.created_at.contains(today)).count()
-
-    # 지점별 회원수 → 가장 회원 많은 지점 계산
-    branch_group = db.session.query(
-        Members.branch,
-        db.func.count(Members.branch)
-    ).group_by(Members.branch).all()
-
-    if branch_group:
-        top_branch_name, top_branch_count = max(branch_group, key=lambda x: x[1])
-    else:
-        top_branch_name, top_branch_count = "없음", 0
-
-    # 전체 방문 횟수 합산
-    total_visits = db.session.query(db.func.sum(Members.visit_count)).scalar() or 0
-
-    return render_template(
-        "members.html",
-        members=members,
-        sort=sort,
-        total_members=total_members,
-        today_members=today_members,
-        top_branch_name=top_branch_name,
-        top_branch_count=top_branch_count,
-        total_visits=total_visits
-    )
+    return jsonify({"amount": amount})
 
 
-# ============================================
-# 서버 실행
-# ============================================
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+# ============================
+#  REGISTER
+# ============================
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method

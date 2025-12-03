@@ -1,26 +1,36 @@
+<!-- templates/success.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>가입 완료</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Everest 적립 완료</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
-<div class="page-wrapper">
+<div class="page">
+    <main class="card card-center">
+        <h1>감사합니다!</h1>
+        {% if name %}
+            <p class="sub"><strong>{{ name }}</strong> 고객님의 정보가 정상적으로 처리되었습니다.</p>
+        {% endif %}
 
-    <h1 class="page-title">가입 완료</h1>
-    <p class="page-subtitle">{{ name }}님 환영합니다!</p>
+        {% if coupons and coupons > 0 %}
+            <div class="alert alert-success">
+                이번 방문으로 <strong>{{ coupons }}개</strong>의 쿠폰이 발행되었습니다.
+                <br>
+                자세한 내용은 직원에게 문의해주세요.
+            </div>
+        {% else %}
+            <p>멤버십 정보가 업데이트되었습니다.</p>
+        {% endif %}
 
-    <div class="card">
-        <p>에베레스트 멤버십 가입이 성공적으로 완료되었습니다.</p>
+        <p class="hint">Everest를 이용해 주셔서 감사합니다.</p>
 
-        <div class="action-area">
-            <a href="/" class="btn">처음으로</a>
-        </div>
-    </div>
-
+        <a href="/" class="btn primary btn-full">처음으로 돌아가기</a>
+    </main>
 </div>
 </body>
 </html>
