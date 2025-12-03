@@ -184,6 +184,7 @@ def visit():
             error = "등록된 회원이 없습니다. 먼저 신규가입을 진행해 주세요."
             return render_template("visit.html", branch=branch, error=error)
 
+        # 방문 횟수 증가
         visit_before = member.visit_count or 0
         member.visit_count = visit_before + 1
 
@@ -193,10 +194,10 @@ def visit():
         return render_template(
             "visit_success.html",
             member=member,
-            coupons=coupons
+            coupons=coupons,
+            branch=branch
         )
 
-    # GET 요청
     branch = request.args.get("branch", "")
     return render_template("visit.html", branch=branch)
 
