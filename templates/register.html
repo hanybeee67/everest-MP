@@ -1,78 +1,62 @@
-<!-- templates/register.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Everest 멤버십 신규가입</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-</head>
-<body>
-<div class="page">
-    <header class="header">
-        <h1>Everest 멤버십 가입</h1>
-        {% if branch %}
-            <p class="sub">현재 지점: <strong>{{ branch }}점</strong></p>
-        {% else %}
-            <p class="sub">지점 정보가 없습니다. 직원에게 문의해 주세요.</p>
-        {% endif %}
-    </header>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신규가입</title>
 
-    <main class="card">
-        <h2>기본 정보 입력</h2>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="header">
+        <h1>신규가입</h1>
+        <div class="sub">에베레스트 멤버십 신규 고객 등록</div>
+    </div>
+
+    <div class="card">
 
         {% if error %}
-            <div class="alert alert-error">{{ error }}</div>
+        <div class="alert alert-error">{{ error }}</div>
         {% endif %}
 
-        <form method="post" class="form">
-            <input type="hidden" name="branch" value="{{ branch }}">
+        <form action="/register" method="post">
 
             <div class="form-group">
-                <label for="name">이름</label>
-                <input id="name" name="name" type="text" required placeholder="이름을 입력해주세요">
+                <label>지점명</label>
+                <input type="text" name="branch" value="{{ branch }}" readonly>
             </div>
 
             <div class="form-group">
-                <label for="phone">휴대폰 번호</label>
-                <input id="phone" name="phone" type="tel" required placeholder="예: 01012345678">
-                <small class="hint">숫자만 입력해주세요.</small>
+                <label>이름</label>
+                <input type="text" name="name" placeholder="예: 홍길동" required>
             </div>
 
             <div class="form-group">
-                <label for="birth">생년월일</label>
-                <input id="birth" name="birth" type="text" placeholder="예: 1980-01-01">
-                <small class="hint">선택 사항이지만, 생일 쿠폰 발행을 위해 권장합니다.</small>
+                <label>전화번호</label>
+                <input type="tel" name="phone" placeholder="예: 01012345678" required>
+            </div>
+
+            <div class="form-group">
+                <label>생년월일</label>
+                <input type="text" name="birth" placeholder="YYYYMMDD">
             </div>
 
             <div class="form-group checkbox-group">
-                <label>
-                    <input type="checkbox" name="marketing">
-                    이벤트 / 쿠폰 알림 수신에 동의합니다. (선택)
-                </label>
+                <label><input type="checkbox" name="marketing"> 마케팅 수신 동의</label><br>
+                <label><input type="checkbox" name="privacy" required> 개인정보 수집 동의(필수)</label>
             </div>
 
-            <div class="form-group checkbox-group">
-                <label>
-                    <input type="checkbox" name="privacy" required>
-                    개인정보 수집 및 이용에 동의합니다. (필수)
-                </label>
-            </div>
+            <button class="btn primary btn-full" type="submit">가입 완료</button>
 
-            <div class="info-box">
-                <strong>혜택 안내</strong>
-                <ul>
-                    <li>첫 방문 고객: 라시 1잔 무료 쿠폰 지급</li>
-                    <li>방문 3회마다 추가 리워드 쿠폰</li>
-                    <li>누적 결제액 10만 원마다 감사 쿠폰 발행</li>
-                </ul>
-            </div>
-
-            <button type="submit" class="btn primary btn-full">멤버십 가입 완료</button>
         </form>
-    </main>
+
+    </div>
+
 </div>
+
 </body>
 </html>

@@ -1,100 +1,47 @@
-<!-- templates/visit.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Everest 재방문 적립</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-</head>
-<body>
-<div class="page">
-    <header class="header">
-        <h1>재방문 적립</h1>
-        {% if branch %}
-            <p class="sub">현재 지점: <strong>{{ branch }}점</strong></p>
-        {% endif %}
-    </header>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>재방문 적립</title>
 
-    <main class="card">
-        <h2>전화번호와 결제 금액을 입력해주세요</h2>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="header">
+        <h1>재방문 적립</h1>
+        <div class="sub">방문 횟수 + 사용 금액 적립</div>
+    </div>
+
+    <div class="card">
 
         {% if error %}
-            <div class="alert alert-error">{{ error }}</div>
+        <div class="alert alert-error">{{ error }}</div>
         {% endif %}
 
-        <form method="post" class="form" enctype="multipart/form-data">
+        <form action="/visit" method="post">
+
             <div class="form-group">
-                <label for="phone">휴대폰 번호</label>
-                <input id="phone" name="phone" type="tel" required placeholder="예: 01012345678">
+                <label>전화번호</label>
+                <input type="tel" name="phone" placeholder="예: 01012345678" required>
             </div>
 
             <div class="form-group">
-                <label for="spend_amount">이번 방문 결제 금액</label>
-                <div class="input-row">
-                    <input id="spend_amount" name="spend_amount" type="text" placeholder="예: 45000">
-                    <span class="unit">원</span>
-                </div>
-                <small class="hint">
-                    숫자만 입력하거나, 아래 영수증 스캔 기능을 이용해주세요.
-                </small>
+                <label>이번 방문 결제 금액</label>
+                <input type="text" name="spend_amount" placeholder="숫자만 입력">
             </div>
 
-            <div class="form-group">
-                <label for="receipt">영수증 스캔 (선택)</label>
-                <input id="receipt" name="receipt" type="file" accept="image/*" capture="environment">
-                <small class="hint">
-                    영수증을 촬영/업로드하면 자동으로 결제 금액을 인식합니다.
-                </small>
-                <button type="button" class="btn secondary btn-small" onclick="uploadReceipt()">영수증에서 금액 읽기</button>
-                <div id="ocr-result" class="hint"></div>
-            </div>
+            <button class="btn primary btn-full" type="submit">적립하기</button>
 
-            <button type="submit" class="btn primary btn-full">적립 완료</button>
         </form>
-    </main>
+
+    </div>
+
 </div>
 
-<script>
-async function uploadReceipt() {
-    const fileInput = document.getElementById('receipt');
-    const resultBox = document.getElementById('ocr-result');
-    const amountInput = document.getElementById('spend_amount');
-
-    if (!fileInput.files || fileInput.files.length === 0) {
-        resultBox.textContent = '먼저 영수증 이미지를 선택해주세요.';
-        resultBox.className = 'hint text-error';
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('receipt', fileInput.files[0]);
-
-    resultBox.textContent = '영수증 분석 중... 잠시만 기다려주세요.';
-    resultBox.className = 'hint';
-
-    try {
-        const res = await fetch('/ocr_upload', {
-            method: 'POST',
-            body: formData
-        });
-        const data = await res.json();
-
-        if (data.amount && data.amount > 0) {
-            amountInput.value = data.amount;
-            resultBox.textContent = `인식된 결제 금액: ${data.amount.toLocaleString()}원`;
-            resultBox.className = 'hint text-success';
-        } else {
-            resultBox.textContent = '금액을 인식하지 못했습니다. 직접 입력해주세요.';
-            resultBox.className = 'hint text-error';
-        }
-    } catch (e) {
-        resultBox.textContent = '영수증 분석 중 문제가 발생했습니다. 직접 금액을 입력해주세요.';
-        resultBox.className = 'hint text-error';
-    }
-}
-</script>
 </body>
 </html>
