@@ -11,7 +11,7 @@ body {
     font-family: "Noto Sans KR", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     background: #f2f2f2;
     color: #222;
-    font-size: 1rem; /* 기본 글자 크기 업그레이드 */
+    font-size: 1rem;
     line-height: 1.5;
 }
 
@@ -20,7 +20,7 @@ body {
 ============================ */
 .page {
     width: 100%;
-    max-width: 700px;   /* PC에서는 넓게 */
+    max-width: 700px;
     margin: 0 auto;
     padding: 20px 16px;
 }
@@ -34,7 +34,7 @@ body {
 }
 
 .header h1 {
-    font-size: 1.8rem; /* 글자 크게 */
+    font-size: 1.8rem;
     font-weight: 700;
     margin: 0;
 }
@@ -60,55 +60,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-/* ============================
-   TITLES
-============================ */
-.card h2 {
-    font-size: 1.4rem;
-    margin-top: 0;
-    margin-bottom: 18px;
-}
-
-/* ============================
-   FORM
-============================ */
-.form-group {
-    margin-bottom: 18px;
-}
-
-.form-group label {
-    font-size: 1.05rem;
-    margin-bottom: 6px;
-    display: block;
-    font-weight: 500;
-}
-
-/* 입력 필드 개선 */
-input[type="text"],
-input[type="tel"],
-input[type="file"] {
-    width: 100%;
-    padding: 12px 14px;
-    border-radius: 12px;
-    border: 1px solid #d0d0d0;
-    font-size: 1.05rem;
-    background: #fafafa;
-}
-
-input:focus {
-    outline: none;
-    border-color: #d07a20;
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(208,122,32,0.25);
-}
-
-/* ============================
-   CHECKBOX
-============================ */
-.checkbox-group label {
-    font-size: 1rem;
 }
 
 /* ============================
@@ -138,30 +89,49 @@ input:focus {
     box-shadow: 0 6px 18px rgba(181, 91, 21, 0.40);
 }
 
-.btn.primary:hover {
-    transform: translateY(-2px);
-}
-
 .btn.secondary {
     background: #ffffff;
     color: #b55b15;
     border: 2px solid rgba(181, 91, 21, 0.40);
 }
 
-.btn.secondary:hover {
-    background: #fff4e6;
+/* ============================
+   FORM
+============================ */
+.form-group {
+    margin-bottom: 18px;
 }
 
-/* 작은 버튼 */
-.btn-small {
-    padding: 8px 14px;
-    font-size: 0.95rem;
+.form-group label {
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+    display: block;
+    font-weight: 500;
 }
 
-/* tiny 버튼 */
-.btn.tiny {
-    padding: 6px 10px;
-    font-size: 0.85rem;
+input[type="text"],
+input[type="tel"],
+input[type="file"] {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #d0d0d0;
+    font-size: 1.05rem;
+    background: #fafafa;
+}
+
+input:focus {
+    outline: none;
+    border-color: #d07a20;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(208,122,32,0.25);
+}
+
+/* ============================
+   CHECKBOX
+============================ */
+.checkbox-group label {
+    font-size: 1rem;
 }
 
 /* ============================
@@ -178,12 +148,6 @@ input:focus {
     background: #ffecec;
     color: #c0392b;
     border: 1px solid #f5b5b5;
-}
-
-.alert-success {
-    background: #e7f7ec;
-    color: #1b5e20;
-    border: 1px solid #b8e0c3;
 }
 
 /* ============================
@@ -229,10 +193,5 @@ th {
     .btn {
         font-size: 1.05rem;
         padding: 12px 18px;
-    }
-
-    input[type="text"], input[type="tel"] {
-        font-size: 1.05rem;
-        padding: 12px 14px;
     }
 }
