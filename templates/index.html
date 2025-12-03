@@ -6,32 +6,33 @@
     <title>Everest 멤버십</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .menu-card {
+            padding: 20px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+            margin-top: 40px;
+        }
+        .btn-full {
+            margin-top: 14px;
+            padding: 14px 0;
+            font-size: 1.2rem;
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="page">
+
     <div class="header">
         <h1>Everest 멤버십</h1>
-        <div class="sub">인도·네팔 정통 레스토랑 멤버십 서비스</div>
+        <div class="sub">원하시는 서비스를 선택해주세요</div>
     </div>
 
-    <div class="card card-center">
-        <h2>원하시는 메뉴를 선택해 주세요</h2>
+    <div class="menu-card">
 
-        <a href="/register?branch=동대문" class="btn primary btn-full" style="margin-bottom:12px;">
-            신규가입 (예시: 동대문)
-        </a>
-
-        <a href="/visit?branch=동대문" class="btn secondary btn-full">
-            재방문 적립 (예시)
-        </a>
-
-        <p style="font-size:0.9rem; margin-top:16px; text-align:center; color:#666;">
-            실제 운영에서는 각 지점별 QR로 접속합니다.
-        </p>
-    </div>
-</div>
-
-</body>
-</html>
+        <!-- 신규가입 -->
+        <a href="/register?branch=동대문" class="btn primary btn-full">
